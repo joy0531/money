@@ -483,7 +483,7 @@ let selPayV   = '';
 let filterV   = '전체';
 let mode      = 'expense'; // 'expense' | 'income'
 let entries   = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-let scriptUrl = localStorage.getItem(URL_KEY) || '';
+let scriptUrl = 'https://script.google.com/macros/s/AKfycbz2vSKei_8LX4B34iaaahMS-6bkUXN4yr_kIEBJHiyyo8B6VoUgXCXGhXeYVVjisBux/exec';
 let undoTimer = null;
 let lastEntry = null;
 
@@ -492,7 +492,7 @@ const today = new Date();
 document.getElementById('date-str').textContent =
   today.toLocaleDateString('ko-KR',{year:'numeric',month:'long',day:'numeric',weekday:'short'});
 document.getElementById('date-in').value = today.toISOString().split('T')[0];
-if (scriptUrl) document.getElementById('script-url').value = scriptUrl;
+document.getElementById('script-url').value = scriptUrl;
 renderCatGrid();
 updateBanner();
 
@@ -758,10 +758,10 @@ function closeOutside(e) { if (e.target===document.getElementById('modal')) clos
 function saveUrl() {
   const v = document.getElementById('script-url').value.trim();
   if (v && !v.startsWith('https://script.google.com')) { toast('⚠️ URL을 확인해주세요'); return; }
-  scriptUrl = v;
-  v ? localStorage.setItem(URL_KEY,v) : localStorage.removeItem(URL_KEY);
+  // URL이 비어있으면 하드코딩된 기본값 유지
+  if (v) scriptUrl = v;
   updateBanner(); closeSetup();
-  toast(v ? '🎉 Google Sheets 연동 완료!' : '연동이 해제됐어요');
+  toast('🎉 Google Sheets 연동 완료!');
   renderHistory();
 }
 
