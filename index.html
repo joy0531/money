@@ -649,7 +649,21 @@ function undoLast() {
 async function sendToSheets(entry) {
   if (!scriptUrl) return false;
   try {
-    await fetch(scriptUrl, { method:'POST', mode:'no-cors', headers:{'Content-Type':'application/json'}, body: JSON.stringify(entry) });
+    const payload = {
+      type:     entry.type,
+      date:     entry.date,
+      amount:   entry.amount,
+      store:    entry.store,
+      category: entry.category,
+      payment:  entry.payment,
+      memo:     entry.memo || ''
+    };
+    await fetch(scriptUrl, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
     return true;
   } catch { return false; }
 }
