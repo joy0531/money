@@ -739,23 +739,9 @@ function renderHistory() {
 }
 
 function deleteEntry(id) {
-  // 해당 카드 요소 찾아서 애니메이션 후 삭제
-  const allEntries = document.querySelectorAll('.entry');
-  let targetEl = null;
-  allEntries.forEach(el => {
-    if (el.querySelector(`.del-btn[onclick="deleteEntry(${id})"]`)) targetEl = el;
-  });
-
-  const doDelete = () => {
-    entries = entries.filter(e => e.id !== id);
-    saveLocal(); renderHistory(); toast('🗑️ 삭제됐어요');
-  };
-
-  if (targetEl) {
-    targetEl.style.transition = 'all 0.22s ease';
-    targetEl.style.opacity = '0';
-    targetEl.style.transform = 'translateX(60px)';
-    targetEl.style.max
+  entries = entries.filter(e => e.id !== id);
+  saveLocal(); renderHistory(); toast('🗑️ 삭제됐어요');
+}
 
 function filterBy(cat, el) {
   filterV = cat;
@@ -785,19 +771,12 @@ function updateBanner() {
   const sub     = document.getElementById('banner-sub');
   const badge   = document.getElementById('conn-badge');
   const pending = entries.filter(e=>!e.synced).length;
-  if (scriptUrl) {
-    banner.className = 'connected';
-    title.textContent = '✅ Google Sheets 연동됨';
-    sub.textContent   = pending>0 ? `미전송 ${pending}건 — 탭해서 재전송` : '입력 즉시 자동 저장됩니다';
-    banner.onclick    = pending>0 ? syncPending : openSetup;
-    if (badge) { badge.textContent='● 연동중'; badge.className='conn-badge on'; }
-  } else {
-    banner.className = '';
-    banner.onclick   = openSetup;
-    title.textContent = 'Google Sheets 연동 설정이 필요해요';
-    sub.textContent   = '탭해서 Apps Script URL을 입력하세요';
-    if (badge) { badge.textContent='● 미연동'; badge.className='conn-badge off'; }
-  }
+  // URL이 하드코딩되어 있으므로 항상 연동됨으로 표시
+  banner.className = 'connected';
+  title.textContent = '✅ Google Sheets 연동됨';
+  sub.textContent   = pending>0 ? `미전송 ${pending}건 — 탭해서 재전송` : '입력 즉시 자동 저장됩니다';
+  banner.onclick    = pending>0 ? syncPending : openSetup;
+  if (badge) { badge.textContent='● 연동중'; badge.className='conn-badge on'; }
 }
 
 function copyCode() {
